@@ -13,7 +13,7 @@ public:
 	Camera(QObject* parent = nullptr);
 	~Camera();
 
-	void render(Hittable::Ptr scene);
+	void render(const Hittable::Ptr& scene);
 
 private:
 	void init();

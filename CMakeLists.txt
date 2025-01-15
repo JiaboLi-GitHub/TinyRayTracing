@@ -5,7 +5,7 @@ project(TinyRayTracing VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Concurrent)
 qt_standard_project_setup()
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -16,4 +16,4 @@ include_directories(
     SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/thirdParty/include
 )
 
-target_link_libraries(TinyRayTracing PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+target_link_libraries(TinyRayTracing PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Concurrent)

@@ -1,5 +1,8 @@
 ﻿#include "camera.h"
 #include <cmath>
+#include <QThreadPool>
+#include <QFuture>
+#include <QtConcurrent>
 #include <qdebug.h>
 #include "sphere.h"
 
@@ -12,8 +15,18 @@ Camera::Camera(QObject *parent)
 Camera::~Camera()
 {}
 
-void Camera::render(Hittable::Ptr scene)
+void Camera::render(const Hittable::Ptr& scene)
 {
+	auto rayColorFun = [this](const Hittable::Ptr& scene, int i, int j) {
+		Ray ray = getRay(i, j);
+		return rayColor(ray, scene, 0);
+		};
+
+	std::unique_ptr<QThreadPool> threadPool = std::make_unique<QThreadPool>();
+	threadPool->setMaxThreadCount(32);
+	QVector<QFuture<glm::dvec3>> futures;
+	futures.resize(m_samplesPerPixel);
+
 	for (int j = 0; j < m_imageHeight; ++j)
 	{
 		for (int i = 0; i < m_imageWidth; ++i)
@@ -21,9 +34,15 @@ void Camera::render(Hittable::Ptr scene)
 			glm::dvec3 color = glm::dvec3(0.0);
 			for (int sample = 0; sample < m_samplesPerPixel; ++sample)
 			{
-				Ray ray = getRay(i, j);
-				color += rayColor(ray, scene, 0);
+				futures[sample] = QtConcurrent::run(threadPool.get(), rayColorFun, scene, i, j);
 			}
+
+			for (int sample = 0; sample < m_samplesPerPixel; ++sample)
+			{
+				futures[sample].waitForFinished();
+				color += futures[sample].result();
+			}
+
 			color /= m_samplesPerPixel;
 
 			emit sigRender(i, j, color);
