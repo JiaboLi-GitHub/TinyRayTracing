@@ -1,4 +1,4 @@
-#include "interval.h"
+﻿#include "interval.h"
 
 Interval::Interval()
 {
@@ -8,6 +8,12 @@ Interval::Interval(double min, double max)
 	: m_min(min),
 	  m_max(max)
 {
+}
+
+Interval::Interval(const Interval& a, const Interval& b)
+{
+	m_min = std::min(a.getMin(), b.getMin());
+	m_max = std::max(a.getMax(), b.getMax());
 }
 
 double Interval::size() const
@@ -54,4 +60,15 @@ void Interval::setMin(double min)
 void Interval::setMax(double max)
 {
 	m_max = max;
+}
+
+Interval Interval::expand(double delta) const
+{
+	auto padding = delta / 2;
+	return Interval(m_min - padding, m_max + padding);
+}
+
+Interval Interval::operator+(double displacement) const
+{
+	return Interval(m_min + displacement, m_max + displacement);
 }

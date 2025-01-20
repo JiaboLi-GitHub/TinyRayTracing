@@ -1,7 +1,7 @@
 ﻿#include "camera.h"
 #include <cmath>
-#include <QThreadPool>
-#include <QFuture>
+#include <qthreadpool.h>
+#include <qfuture.h>
 #include <QtConcurrent>
 #include <qdebug.h>
 #include "sphere.h"
@@ -9,11 +9,50 @@
 Camera::Camera(QObject *parent)
 	: QObject(parent)
 {
-	init();
 }
 
 Camera::~Camera()
 {}
+
+void Camera::init(const CameraConfig & config)
+{
+	// 拷贝
+	m_aspectRatio = AspectRatio; 
+	m_imageWidth = CanvasWidth;
+	m_cameraCenter = config.cameraCenter;
+	m_fov = config.fov;
+	m_look = config.look;         
+	m_up = config.up;             
+	m_samplesPerPixel = config.samplesPerPixel;
+	m_maxDepth = config.maxDepth;    
+	m_defocusAngle = config.defocusAngle;
+	m_focusDist = config.focusDist; 
+	m_backgroundColor = config.backgroundColor;
+
+	// 解析
+	m_imageHeight = int(CanvasWidth / AspectRatio);
+
+	double viewportHeight = 2.0 * m_focusDist * std::tan(toRadians(m_fov) / 2);
+	double viewportWidth = viewportHeight * (double(m_imageWidth) / m_imageHeight);
+
+	glm::dvec3 w, u, v;
+	w = glm::normalize(m_cameraCenter - m_look);
+	u = glm::normalize(glm::cross(m_up, w));
+	v = glm::cross(w, u);
+
+	glm::dvec3 viewPortU = viewportWidth * u;
+	glm::dvec3 viewPortV = viewportHeight * v;
+
+	m_pixelDeltaU = viewPortU / (m_imageWidth * 1.0);
+	m_pixelDeltaV = viewPortV / (m_imageHeight * 1.0);
+
+	auto pixel_upper_left = m_cameraCenter - m_focusDist * w - viewPortU / 2.0 - viewPortV / 2.0;
+	m_pixel00Loc = pixel_upper_left + 0.5 * (m_pixelDeltaU + m_pixelDeltaV);
+
+	auto defocusRadius = m_focusDist * tan(toRadians(m_defocusAngle / 2));
+	m_defocusDiskU = u * defocusRadius;
+	m_defocusDiskV = v * defocusRadius;
+}
 
 void Camera::render(const Hittable::Ptr& scene)
 {
@@ -50,59 +89,32 @@ void Camera::render(const Hittable::Ptr& scene)
 	}
 }
 
-void Camera::init()
-{
-	m_imageHeight= int(CanvasWidth / AspectRatio);
-
-	//double focalLength = glm::length(m_look - m_cameraCenter);
-	//double h = std::tan(toRadians(m_fov) / 2);
-	double viewportHeight = 2.0 * m_focusDist * std::tan(toRadians(m_fov) / 2);
-	double viewportWidth = viewportHeight * (double(m_imageWidth) / m_imageHeight);
-
-	glm::dvec3 w, u, v;
-	w = glm::normalize(m_cameraCenter - m_look);
-	u = glm::normalize(glm::cross(m_up, w));
-	v = glm::cross(w, u);
-
-	glm::dvec3 viewPortU = viewportWidth * u;
-	glm::dvec3 viewPortV = viewportHeight * v;
-
-	m_pixelDeltaU = viewPortU / (m_imageWidth * 1.0);
-	m_pixelDeltaV = viewPortV / (m_imageHeight * 1.0);
-
-	auto pixel_upper_left = m_cameraCenter - m_focusDist * w - viewPortU / 2.0 - viewPortV / 2.0;
-	m_pixel00Loc = pixel_upper_left + 0.5 * (m_pixelDeltaU + m_pixelDeltaV);
-
-	auto defocusRadius = m_focusDist * tan(toRadians(m_defocusAngle / 2));
-	m_defocusDiskU = u * defocusRadius;
-	m_defocusDiskV = v * defocusRadius;
-}
-
 glm::dvec3 Camera::rayColor(const Ray& ray, const Hittable::Ptr& scene, int depth)
 {
 	if (depth == m_maxDepth)
 		return glm::dvec3(0.0, 0.0, 0.0);
 
 	HitRecord rec;
-	if (scene->hit(ray, Interval(0.001, Infinity), rec))
-	{
-		Ray scattered;
-		glm::dvec3 attenuation;
-		if (rec.material->scatter(ray, rec, attenuation, scattered))
-		{
-			return attenuation * rayColor(scattered, scene, depth + 1);
-		}
-		return glm::dvec3(0.0, 0.0, 0.0);
-	}
 
-	double x = 0.5f * (ray.getDirection().y + 1.0);
-	auto backColor = (1.0 - x) * glm::dvec3(1.0) + x * glm::dvec3(0.5f, 0.7f, 1.0);
-	return backColor;
+	// If the ray hits nothing, return the background color.
+	if (!scene->hit(ray, Interval(0.001, Infinity), rec))
+		return m_backgroundColor;
+
+	Ray scattered;
+	glm::dvec3 attenuation;
+	glm::dvec3 color_from_emission = rec.material->emitted(rec.u, rec.v, rec.pos);
+
+	if (!rec.material->scatter(ray, rec, attenuation, scattered))
+		return color_from_emission;
+
+	glm::dvec3 color_from_scatter = attenuation * rayColor(scattered, scene, depth + 1);
+
+	return color_from_emission + color_from_scatter;
 }
 
 glm::dvec3 Camera::sampleSquare() const
 {
-	return glm::dvec3(randomdouble() - 0.5, randomdouble() - 0.5, 0);
+	return glm::dvec3(randomDouble() - 0.5, randomDouble() - 0.5, 0);
 }
 
 Ray Camera::getRay(int i, int j) const
@@ -116,7 +128,9 @@ Ray Camera::getRay(int i, int j) const
 
 	rayDirection = glm::normalize(rayDirection);
 
-	return Ray(rayOrigin, rayDirection);
+	double time = randomDouble();
+
+	return Ray(rayOrigin, rayDirection, time);
 }
 
 glm::dvec3 Camera::defocusDiskSample() const

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "global.h"
 
 class Interval
@@ -7,6 +7,8 @@ public:
 	Interval();
 
 	Interval(double min, double max);
+
+	Interval(const Interval& a, const Interval& b);
 
 	double size() const;
 
@@ -23,6 +25,10 @@ public:
 	void setMin(double min);
 
 	void setMax(double max);
+
+	Interval expand(double delta) const;
+
+	Interval operator+(double displacement) const;
 
 private:
 	double m_min = Infinity;

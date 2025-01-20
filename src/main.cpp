@@ -1,4 +1,4 @@
-#include <QtWidgets/QApplication>
+﻿#include <QtWidgets/QApplication>
 #include <qthread.h>
 #include "canvas.h"
 #include "rayTracing.h"
@@ -7,10 +7,12 @@ int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
-    Canvas canvas;
-    canvas.show();
+    CurrentSceneType = SceneType::OneWeekend;
 
     RayTracing rayTracing;
+    
+    Canvas canvas;
+    canvas.show();
 
     QThread thread;
     rayTracing.moveToThread(&thread);

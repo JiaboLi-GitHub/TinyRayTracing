@@ -97,9 +97,13 @@ void Canvas::saveAsImage()
 {
 	repaint();
 
-	m_pixmap.save("tinyRayTracing.png", "PNG");
+	QString dateTimeString = QDateTime::currentDateTime().toString("yyyy-MM-dd-HH-mm-ss");
+	QString fileName = QString("%1.png").arg(dateTimeString);
 
-	qInfo() << QString("图片已保存:%1/tinyRayTracing.png").arg(QDir::currentPath());
+	auto code = m_pixmap.save(fileName, "PNG");
+
+	if(code)
+		qInfo() << QString("图片已保存:%1/%2").arg(QDir::currentPath()).arg(fileName);
 }
 
 void Canvas::slotRenderStart()

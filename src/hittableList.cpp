@@ -1,7 +1,12 @@
-#include "hittableList.h"
+﻿#include "hittableList.h"
 
 HittableList::HittableList()
 {
+}
+
+HittableList::HittableList(Hittable::Ptr hittable)
+{
+	add(hittable);
 }
 
 bool HittableList::hit(const Ray& ray, Interval rayT, HitRecord& rec) const
@@ -26,9 +31,21 @@ bool HittableList::hit(const Ray& ray, Interval rayT, HitRecord& rec) const
 void HittableList::add(const Hittable::Ptr& hittable)
 {
 	m_hittables.push_back(hittable);
+
+	m_aabb = Aabb(m_aabb, hittable->getAabb());
 }
 
 void HittableList::clear()
 {
 	m_hittables.clear();
+}
+
+std::vector<Hittable::Ptr> HittableList::getHittables()
+{
+	return m_hittables;
+}
+
+size_t HittableList::size() const
+{
+	return m_hittables.size();
 }

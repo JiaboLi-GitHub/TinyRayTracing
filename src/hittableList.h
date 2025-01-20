@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "global.h"
 #include "hittable.h"
 
@@ -9,11 +9,17 @@ public:
 
 	HittableList();
 
-	bool hit(const Ray& ray, Interval rayT, HitRecord& rec) const override;
+	HittableList(Hittable::Ptr hittable);
+
+	virtual bool hit(const Ray& ray, Interval rayT, HitRecord& rec) const override;
 
 	void add(const Hittable::Ptr& hittable);
 
 	void clear();
+
+	std::vector<Hittable::Ptr> getHittables();
+
+	size_t size() const;
 
 private:
 	std::vector<Hittable::Ptr> m_hittables;

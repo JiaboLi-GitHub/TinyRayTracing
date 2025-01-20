@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QObject>
 #include <glm/glm.hpp>
@@ -17,6 +17,9 @@ public:
 private:
 	void initScene();
 	void initCamera();
+	void initOneWeekendScene();
+	void initCornellBoxScene();
+	void initNextWeekScene();
 
 signals:
 	void sigRenderStart();
@@ -28,5 +31,6 @@ public slots:
 
 private:
 	Camera* m_camera = nullptr;
+	CameraConfig m_cameraConfig;
 	HittableList::Ptr m_scene = nullptr;
 };
