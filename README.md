@@ -7,7 +7,6 @@
 ![FotoJet](assets/FotoJet-1737623487665-1.jpg)
 
 CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架实时显示渲染效果。
-
 GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 
 </div>
@@ -38,15 +37,12 @@ GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 <div align="center">
 
 ![2025-01-22-12-35-11](assets/2025-01-22-12-35-11.png)
-
 <div style="text-align: center;">场景-in One Weekend</div>
 
 ![2025-01-22-17-08-58](assets/2025-01-22-17-08-58.png)
-
 <div style="text-align: center;">场景-The Next Week</div>
 
 ![2025-01-22-17-01-49](assets/2025-01-22-17-01-49.png)
-
 <div style="text-align: center;">场景-康奈尔盒</div>
 
 </div>
@@ -58,3 +54,7 @@ GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 |     场景     | in One Weekend | The Next Week | 康奈尔盒 |
 | :----------: | :------------: | :-----------: | :------: |
 | 耗时（分钟） |     10.88      |     31.53     |  64.99   |
+
+|      |      |      |      |
+| :--: | :--: | :--: | :--: |
+|      |      |      |      |
