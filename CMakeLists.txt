@@ -1,19 +1,25 @@
-﻿cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
+project(TinyRayTracing CUDA)
 
-project(TinyRayTracing VERSION 1.0.0 LANGUAGES CXX)
+set(CMAKE_CUDA_STANDARD 17)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Concurrent)
-qt_standard_project_setup()
-
-file(GLOB_RECURSE SOURCES src/*.cpp)
-file(GLOB_RECURSE HEADERS src/*.h)
-qt_add_executable(TinyRayTracing ${SOURCES} ${HEADERS})
-
-include_directories(
-    SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/thirdParty/include
+add_executable(TinyRayTracing main.cu
+        ray.cu
+        ray.cuh
+        global.cu
+        global.cuh
+        camera.cu
+        camera.cuh
+        hittable.cu
+        hittable.cuh
+        interval.cu
+        interval.cuh
+        material.cu
+        material.cuh
+        vec3.cuh
 )
 
-target_link_libraries(TinyRayTracing PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::Concurrent)
+set_target_properties(TinyRayTracing PROPERTIES
+        CUDA_SEPARABLE_COMPILATION ON)
+
+target_include_directories(TinyRayTracing PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
