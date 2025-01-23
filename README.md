@@ -6,7 +6,9 @@
 
 ![FotoJet](assets/FotoJet-1737623487665-1.jpg)
 
-CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架实时显示渲染效果。GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
+CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架实时显示渲染效果。
+
+GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 
 </div>
 
@@ -28,9 +30,12 @@ CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架�
 相关笔记：
 
 <a href="https://github.com/JiaboLi-GitHub/Note/blob/main/%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA/%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA.md">光线追踪笔记</a>
+
 <a href="https://github.com/JiaboLi-GitHub/Note/blob/main/CUDA/CUDA.md">CUDA笔记</a>
 
 ## 展示
+
+<div align="center">
 
 ![2025-01-22-12-35-11](assets/2025-01-22-12-35-11.png)
 
@@ -43,6 +48,8 @@ CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架�
 ![2025-01-22-17-01-49](assets/2025-01-22-17-01-49.png)
 
 <div style="text-align: center;">场景-康奈尔盒</div>
+
+</div>
 
 ## 数据
 
