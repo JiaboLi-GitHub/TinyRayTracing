@@ -1,12 +1,12 @@
 <div align="center">
+
 # 光线追踪
 
 本项目是学习<a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html">《Ray Tracing in One Weekend》</a>和<a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">《Ray Tracing: The Next Week》</a>光线追踪教程完成的作品。
 
 ![FotoJet](assets/FotoJet-1737623487665-1.jpg)
 
-CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架实时显示渲染效果。
-GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
+CPU 分支中采用CPU多线程技术加速光线追踪，并且结合Qt框架实时显示渲染效果。<br>GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 
 </div>
 
@@ -36,13 +36,18 @@ GPU 分支中采用NVIDIA 的 CUDA 技术，实现了 GPU 并行加速。
 <div align="center">
 
 ![2025-01-22-12-35-11](assets/2025-01-22-12-35-11.png)
-场景-in One Weekend
+<div align="center">场景-in One Weekend</div>
+
+<br>
 
 ![2025-01-22-17-08-58](assets/2025-01-22-17-08-58.png)
-场景-The Next Week
+<div align="center">场景-The Next Week</div>
+
+<br>
 
 ![2025-01-22-17-01-49](assets/2025-01-22-17-01-49.png)
-场景-康奈尔盒
+
+<div align="center">场景-康奈尔盒</div>
 
 </div>
 
